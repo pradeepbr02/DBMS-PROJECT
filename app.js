@@ -4,9 +4,11 @@ const bodyParser = require('body-parser');
 
 const mysql = require('mysql');
 
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 
-const jwt = require('jsonwebtoken')
+const session = require('express-session')
+
+const cookieParser = require('cookie-parser')
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -28,7 +30,18 @@ db.connect((err)=>{
 
 const app = express();
 
+app.use(session({
+    secret:"Anykey",
+    resave:true,
+    saveUninitialized:true,
+    cookie:{
+        maxAge:60*60*24
+
+    }
+}))
+
 const ejs = require('ejs');
+const { Cookie } = require('express-session');
 
 app.set('view engine' , 'ejs');
 app.use(bodyParser.json());
@@ -72,21 +85,39 @@ app.post("/register" , async (req,res)=>{
             }
          });
 
-      
-
-
-   
-      
-     
-     })
+})
         
   
-  
-
-   
-
-app.get('/login' , (req , res)=>{
+  app.get('/login' , (req , res)=>{
     res.render("login");
+})
+
+app.post('/login' ,  (req , res)=>{
+    let user_password = req.body.password;
+    let user_email = req.body.email;
+
+    db.query('select * from student where email=?' , [user_email] ,  (err , results)=>{
+        if(results.length > 0){
+            for(let i =0;i<results.length;i++){
+            bcrypt.compare( user_password,results[i].password,(err , check)=>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log(req.session);
+                    req.session.student_id = results[i].student_id;
+                    console.log("OK");
+                }
+            });
+        
+        }
+    }
+        else{
+            console.log("result not fetched");
+        }
+
+     
+})
 })
 
 app.listen(5000, (req , res)=>{
