@@ -10,6 +10,24 @@ const session = require('express-session')
 
 const cookieParser = require('cookie-parser')
 
+const passport = require('passport');
+
+const passportLocal = require("passport-local").Strategy;
+
+const app = express();
+
+app.use(session({
+    secret:"Anykey",
+    resave:false,
+    saveUninitialized:false,
+    cookie:{
+        maxAge:60*60*24
+
+    }
+}))
+
+
+
 const db = mysql.createConnection({
     host: "localhost",
     user:'root',
@@ -28,20 +46,12 @@ db.connect((err)=>{
 
 
 
-const app = express();
 
-app.use(session({
-    secret:"Anykey",
-    resave:true,
-    saveUninitialized:true,
-    cookie:{
-        maxAge:60*60*24
 
-    }
-}))
 
 const ejs = require('ejs');
 const { Cookie } = require('express-session');
+const { text } = require('body-parser');
 
 app.set('view engine' , 'ejs');
 app.use(bodyParser.json());
@@ -69,44 +79,72 @@ app.post("/register" , async (req,res)=>{
             console.log("Password doesn't match");
             res.render("register");
         }
+
+        
     
     })
 
     let hashedpassword = await bcrypt.hash(req.body.password , 2);
 
+   
 
-    db.query('INSERT INTO student values (null,?,?,?,?,?)' , [req.body.first , req.body.last , req.body.email , hashedpassword , req.body.dob] , (err , results)=>{
+
+    db.query('INSERT INTO student values (null,?,?,?,?,? , ?)' , [req.body.first , req.body.last , req.body.email , hashedpassword , req.body.dob , req.body.pno] , (err , data)=>{
             if(err){
                 console.log(err);
             }
             else {
                 res.redirect("/login");
-                console.log(results);
+                console.log(data);
             }
          });
 
 })
+
         
   
   app.get('/login' , (req , res)=>{
     res.render("login");
 })
+let info=  {
+id : Number,
+name : String,
+email : String,
+contact : String
 
+}
 app.post('/login' ,  (req , res)=>{
     let user_password = req.body.password;
     let user_email = req.body.email;
 
-    db.query('select * from student where email=?' , [user_email] ,  (err , results)=>{
-        if(results.length > 0){
-            for(let i =0;i<results.length;i++){
-            bcrypt.compare( user_password,results[i].password,(err , check)=>{
+    db.query('select * from student where email=?' , [user_email] ,  (err , data)=>{
+        if(data.length > 0){
+            for(let i =0;i<data.length;i++){
+            bcrypt.compare( user_password,data[i].password,(err , check)=>{
                 if(err){
                     console.log(err);
                 }
                 else{
                     console.log(req.session);
-                    req.session.student_id = results[i].student_id;
-                    console.log("OK");
+                    req.session.student_id = data[i].student_id;
+                    console.log(req.sessionID);
+
+                     info = {
+                        id : data[0].student_id,
+                        name :data[0].first_name,
+                        email : data[0].email,
+                        contact : data[0].contact
+
+                    }
+
+                    res.redirect("/profile");
+                    
+
+                     
+                    
+
+                    
+                   
                 }
             });
         
@@ -118,6 +156,54 @@ app.post('/login' ,  (req , res)=>{
 
      
 })
+})
+
+app.get('/', (req , res)=>{
+    res.render("home");
+})
+
+app.get("/profile" , (req , res)=>{
+
+  res.render("profile" , {info : info});
+
+
+})
+
+app.get("/profile/dashboard" , (req , res)=>{
+    res.render("dashboard");
+})
+
+app.get("/admin/login" , (req , res)=>{
+    res.render("adminLogin");
+});
+
+app.post('/admin/login' , (req , res)=>{
+    let mail = req.body.mail;
+    let password = req.body.passsword;
+    db.query('select * from tutor where email = ?' , [mail] , (err, results)=>{
+        if(err){
+            throw err;
+
+        }
+        if(results.length > 0){
+            if(password != results[0].password){
+                console.log("Passwords dont match");
+                res.redirect("/admin/login");
+            }
+            else{
+                console.log("OKk");
+                res.redirect('/student/attendence');
+            }
+        }
+        else{
+            console.log("results not fetched");
+        }
+    })
+
+});
+
+app.get("/student/attendence" , (req, res)=>{
+    res.send("<h1>Attendence Porstal</h1>")
 })
 
 app.listen(5000, (req , res)=>{
