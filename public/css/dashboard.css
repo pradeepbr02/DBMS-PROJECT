@@ -148,7 +148,7 @@ nav .search-box .bx-search{
   transition: all 0.4 ease;
 }
 .home-section nav .profile-details{
-  display: flex;
+  /* display: flex; */
   align-items: center;
   background: #F5F6FA;
   border: 2px solid #EFEEF1;
@@ -157,6 +157,7 @@ nav .search-box .bx-search{
   min-width: 190px;
   padding: 0 15px 0 2px;
 }
+
 nav .profile-details img{
   height: 40px;
   width: 40px;
@@ -181,9 +182,10 @@ nav .profile-details i{
 .home-content .overview-boxes{
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 0 20px;
+  justify-content:space-between;
+  /* flex-wrap: wrap; */
+
+  
   margin-bottom: 26px;
 }
 .overview-boxes .box{

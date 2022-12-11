@@ -1,0 +1,86 @@
+
+.heading{
+    font-size: 2rem;
+    
+}
+.cards{
+   
+    background-image: linear-gradient(to right, rgba(185, 9, 9, 0), rgba(255,0,0,1));
+    align-items: center;
+    
+}
+
+html,body{
+    background-color: #00DBDE;
+background-image: linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%);
+}
+.card1{
+
+    height: 400px;
+    width: 350px;
+    position: absolute;  /* Position the div element relative to the screen */
+    top: 50%;  /* Center the div element vertically on the screen */
+    left: 50%;  /* Center the div element horizontally on the screen */
+    transform: translate(-50%, -50%);
+ 
+
+   /* margin: auto;
+    text-align: center; */
+    border: 2px solid;
+    
+    border-radius: 2rem;
+    background-color: #FFDEE9;
+background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+
+ 
+
+}
+.card-body{
+  height: 21rem;
+  align-items: center;
+  text-align: center;
+
+}
+
+#mailid{
+    border-radius: 1rem;
+    width: 15rem;
+    height: 3rem;
+    margin-top: 10px;
+
+}
+
+#att-num{
+    border-radius: 1rem;
+    width: 15rem;
+    height: 3rem;
+    margin-top: 10px;
+}
+
+.mailname{
+    margin-top: 20px;
+}
+
+::placeholder{
+    align-items: center;
+    text-align: center;
+}
+    
+
+
+.Present{
+margin-right: 10px
+
+}
+.attendence-select{
+    padding: 15px 0 0 0;
+    margin-top: 10px;
+}
+
+
+
+.sub{
+    width: 85%;
+    margin-top: 50px;
+
+}

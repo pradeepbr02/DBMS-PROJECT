@@ -4,7 +4,9 @@ const bodyParser = require('body-parser');
 
 const mysql = require('mysql');
 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+
+const path  = require('path');
 
 const session = require('express-session')
 
@@ -57,7 +59,8 @@ app.set('view engine' , 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use(express.static("public"));
+// app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get("/register" , (req , res)=>{
@@ -86,8 +89,7 @@ app.post("/register" , async (req,res)=>{
 
     let hashedpassword = await bcrypt.hash(req.body.password , 2);
 
-   
-
+ 
 
     db.query('INSERT INTO student values (null,?,?,?,?,? , ?)' , [req.body.first , req.body.last , req.body.email , hashedpassword , req.body.dob , req.body.pno] , (err , data)=>{
             if(err){
@@ -98,6 +100,8 @@ app.post("/register" , async (req,res)=>{
                 console.log(data);
             }
          });
+
+         
 
 })
 
@@ -116,6 +120,8 @@ contact : String
 app.post('/login' ,  (req , res)=>{
     let user_password = req.body.password;
     let user_email = req.body.email;
+
+    
 
     db.query('select * from student where email=?' , [user_email] ,  (err , data)=>{
         if(data.length > 0){
@@ -136,16 +142,53 @@ app.post('/login' ,  (req , res)=>{
                         contact : data[0].contact
 
                     }
+                
+                  console.log(info);
 
-                    res.redirect("/profile");
+                  db.query("select * from attendence where student_id= ?" , [info.id] , (err , acc)=>{
+                    if(!acc.length){
+                        db.query('insert into attendence values (? ,?)' ,[info.id ,0] , (err , records)=>{
+                                    if(err){
+                                        console.log(err);
+                
+                                    }
+                                    else{
+                                       
+                                        console.log(records);
+                                        res.redirect("/profile");
+                                    }
+                                 })
+
+                    }
+                    else if(acc){
+                        res.redirect('/profile');
+                        console.log("not updating");
+                    }
+                    // if(acc.length <= 0){
+                    //     db.query('insert into attendence values (? ,?)' ,[info.id ,0] , (err , records)=>{
+                    //         if(err){
+                    //             console.log(err);
+        
+                    //         }
+                    //         else{
+                               
+                    //             console.log(records);
+                    //             res.redirect("/profile");
+                    //         }
+                    //      })
+                    // }
+                    // else{
+                    //     res.redirect("/profile")
                     
+                    // }
+                    
+
+                  })
+
+                }
+                   
 
                      
-                    
-
-                    
-                   
-                }
             });
         
         }
@@ -154,8 +197,7 @@ app.post('/login' ,  (req , res)=>{
             console.log("result not fetched");
         }
 
-     
-})
+     })
 })
 
 app.get('/', (req , res)=>{
@@ -169,9 +211,28 @@ app.get("/profile" , (req , res)=>{
 
 })
 
+
+let zero=0;
+
 app.get("/profile/dashboard" , (req , res)=>{
-    res.render("dashboard");
-})
+    db.query(' select der.student_id ,der.email , der.first_name ,der.classes_attended from (select S.student_id, S.email , S.first_name , A.classes_attended from student S inner join attendence A on S.student_id=A.student_id)as der where student_id=?' , [info.id] , (err , results)=>{
+      
+       console.log(results)
+      
+         res.render("dashboard" , {
+            username:results[0].first_name,
+            mail : results[0].email,
+            classes_attended: results[0].classes_attended,
+            remaining_classes : 14-results[0].classes_attended
+        })
+    
+   
+    
+  
+    })
+    
+});
+
 
 app.get("/admin/login" , (req , res)=>{
     res.render("adminLogin");
@@ -203,9 +264,33 @@ app.post('/admin/login' , (req , res)=>{
 });
 
 app.get("/student/attendence" , (req, res)=>{
-    res.send("<h1>Attendence Porstal</h1>")
-})
+   res.render("attendence");
+});
 
-app.listen(5000, (req , res)=>{
+let id;
+
+app.post('/student/attendence' , (req , res)=>{
+   db.query('select * from student where email = ?', [req.body.mail] , (err , results)=>{
+    if(err){
+        console.log(err);
+    }
+    else{
+        db.query(`update attendence set classes_attended=? where student_id =?` ,[req.body.att , results[0].student_id], (err , data)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log('ok')
+            }
+        })
+    }
+   })
+
+ 
+})
+ 
+
+    
+app.listen(3000, (req , res)=>{
     console.log('Server is running');
 });
