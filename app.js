@@ -144,6 +144,21 @@ app.post('/login' ,  (req , res)=>{
                     }
                 
                   console.log(info);
+                  db.query('select * from tutor_review where student_id= ?' ,[info.id] , (err , prad1 )=>{
+                    if(!prad1.length){
+                        db.query('insert into tutor_review (student_id) values (?)' , [info.id] , (err , prad)=>{
+                            if(err){
+                                throw err;
+                            }
+                            else {
+                                console.log(prad);
+                                
+                            }
+                        })
+
+                    }
+                  })
+               
 
                   db.query("select * from attendence where student_id= ?" , [info.id] , (err , acc)=>{
                     if(!acc.length){
@@ -181,6 +196,7 @@ app.post('/login' ,  (req , res)=>{
                     //     res.redirect("/profile")
                     
                     // }
+                  
                     
 
                   })
@@ -212,9 +228,25 @@ app.get("/profile" , (req , res)=>{
 })
 
 
-let zero=0;
 
 app.get("/profile/dashboard" , (req , res)=>{
+    let forChart=[];
+   db.query('select * from tutor_review where student_id = ?' , [info.id] , (err , data)=>{
+    if(err){
+        console.log(err);
+    }
+    else{
+        forChart.push(data[0].class1);
+        forChart.push(data[0].class2);
+        forChart.push(data[0].class3);
+        forChart.push(data[0].class4);
+        forChart.push(data[0].class5);
+        
+
+    }
+   })
+
+  
     db.query(' select der.student_id ,der.email , der.first_name ,der.classes_attended from (select S.student_id, S.email , S.first_name , A.classes_attended from student S inner join attendence A on S.student_id=A.student_id)as der where student_id=?' , [info.id] , (err , results)=>{
       
        console.log(results)
@@ -223,22 +255,21 @@ app.get("/profile/dashboard" , (req , res)=>{
             username:results[0].first_name,
             mail : results[0].email,
             classes_attended: results[0].classes_attended,
-            remaining_classes : 14-results[0].classes_attended
+            remaining_classes : 14-results[0].classes_attended,
+            array : forChart
         })
-    
-   
-    
-  
-    })
+    });
     
 });
 
-
-app.get("/admin/login" , (req , res)=>{
-    res.render("adminLogin");
+app.post("/student/logout" , (req , res)=>{
+    res.redirect('/login')
+})
+app.get("/tutor/login" , (req , res)=>{
+    res.render("tutorLogin");
 });
 
-app.post('/admin/login' , (req , res)=>{
+app.post('/tutor/login' , (req , res)=>{
     let mail = req.body.mail;
     let password = req.body.passsword;
     db.query('select * from tutor where email = ?' , [mail] , (err, results)=>{
@@ -249,7 +280,7 @@ app.post('/admin/login' , (req , res)=>{
         if(results.length > 0){
             if(password != results[0].password){
                 console.log("Passwords dont match");
-                res.redirect("/admin/login");
+                res.redirect("/tutor/login");
             }
             else{
                 console.log("OKk");
@@ -263,14 +294,17 @@ app.post('/admin/login' , (req , res)=>{
 
 });
 
+
 app.get("/student/attendence" , (req, res)=>{
-   res.render("attendence");
+    
+   res.render("attendence" )
+   
 });
 
-let id;
+
 
 app.post('/student/attendence' , (req , res)=>{
-   db.query('select * from student where email = ?', [req.body.mail] , (err , results)=>{
+   db.query('select * from student where student_id = ?', [req.body.id] , (err , results)=>{
     if(err){
         console.log(err);
     }
@@ -280,15 +314,95 @@ app.post('/student/attendence' , (req , res)=>{
                 console.log(err);
             }
             else{
-                console.log('ok')
+                res.redirect('/student/update/points');
             }
         })
     }
    })
 
  
+});
+app.get('/tutor/review/:classNum/:points/:id' , (req , res)=>{
+    let points = req.params.points;
+    let classNum = req.params.classNum;
+    let id = req.params.id;
+    db.query('select * from tutor_review where student_id = ?' ,[id], (err , results)=>{
+        console.log(results);
+        if(!results.length){
+           
+            db.query('insert into tutor_review (student_id , class' + classNum + ') values (?, ?)' ,[id , points] ,(err , checks)=>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log('inserted successfully', checks)
+                }
+            }  )
+        }
+        else{
+            db.query('update tutor_review set class' + classNum + '=' + points+' where student_id= ?' , [results[0].student_id , points ] , (err , check)=>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log("updated successfully");
+                }
+            })
+
+        }
+    })
+  
+})
+
+app.get('/review/viewAll'  , (req , res)=>{
+    db.query('select * from tutor_review' , (err , results)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log(results);
+        }
+    })
 })
  
+app.get("/student/update/points" , (req , res)=>{
+    res.render("points");
+
+})
+
+app.post("/student/update/points" , (req , res)=>{
+    let points = req.body.point;
+    let classNum = req.body.numbers;
+    let id = req.body.studentid;
+    db.query('select * from tutor_review where student_id = ?' ,[id], (err , results)=>{
+        console.log(results);
+        if(!results.length){
+           
+            db.query('insert into tutor_review (student_id , class' + classNum + ') values (?, ?)' ,[id , points] ,(err , checks)=>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log('inserted successfully', checks)
+                }
+            }  )
+        }
+        else{
+            db.query('update tutor_review set class' + classNum + '=' + points+' where student_id= ?' , [results[0].student_id , points ] , (err , check)=>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log("updated successfully");
+                    res.redirect('/tutor/login')
+                }
+            })
+
+        }
+    })
+
+})
+
 
     
 app.listen(3000, (req , res)=>{

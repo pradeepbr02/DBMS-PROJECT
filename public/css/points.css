@@ -1,0 +1,64 @@
+body{
+    background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(190,244,255,1) 100%);
+}
+.containers{
+    height: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.form-container{
+    height: 350px;
+    width: 600px;
+    border-radius: 1rem;
+    background-color: rgb(221, 231, 240);
+  
+   
+}
+
+.updatebtn{
+    height: 50px;
+    width: 100px;
+}
+
+.user-id{
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+
+.classes{
+    margin-bottom: 15px;
+}
+
+.subbtn{
+    margin-top: 15px;
+    padding: 2px 30px 2px 30px;
+    width: 50%;
+}
+
+.user-id .id{
+    width: 50%;
+    height: 2.5rem;
+    border-radius: 1rem;
+}
+
+.classnumber .classes{
+    width: 50%;
+    height: 2.5rem;
+    border-radius: 1rem;
+}
+
+.points .classpoints{
+    width: 50%;
+    height: 2.5rem;
+    border-radius: 1rem;
+}
+
+::placeholder{
+    text-align: center;
+
+}

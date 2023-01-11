@@ -444,3 +444,12 @@ nav .profile-details i{
 .checked {
   color: orange;
 }
+
+.logout{
+
+  height: 2rem;
+  width: 2.5rem;
+  margin-top: 2rem;
+  border-radius: 1rem;
+
+}

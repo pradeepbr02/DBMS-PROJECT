@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>points Update</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/points.css">
+  </head>
+  <body>
+
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">Drive Me</span>
+        </div>
+      </nav>
+      <form action="/student/update/points" method="post">
+      <div class="containers">
+        <div class="form-container">
+            <div class="form1">
+            <div class="heading">
+                <h2>Update Points</h2>
+            </div>
+            <div class="user-id">
+                <input type="text" class="id" placeholder="Enter Student's ID" name="studentid">
+            </div>
+            <div class="classnumber">
+                <input type="number" class="classes" placeholder="Nth class" name="numbers">
+            </div>
+            <div class="points">
+                <input type="number" class="classpoints" placeholder="Enter points for the class" name="point">
+            </div>
+            <button class="btn btn-primary subbtn" type="submit">Update</button> 
+        </div>
+      </div>
+      </div>
+      </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  </body>
+</html>

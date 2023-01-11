@@ -16,8 +16,9 @@
   
   <div class="sidebar">
     <div class="logo-details">
-    
+    <form action="/student/logout" method="post">
       <span class="logo_name">Drive Me</span>
+      
     </div>
 
   </div>
@@ -32,6 +33,7 @@
       <div class="profile-details">
         <div class="name">Name  : <%= username %> </div>
         <div class="mail">Email : <%= mail %> </div>
+     
       </div>
       
         
@@ -63,136 +65,61 @@
           <div class="title">Track Your skills</div>
           <div class="sales-details">
             <canvas id="lineChart" height="180" width="400"></canvas>
-         
+        
           </div>
           <!-- <div class="button">
             <a href="#">See All</a>
           </div> -->
-        </div>
-        <div class="top-sales box">
-          <div class="title">Name of the mentors</div>
-          <ul class="top-sales-details">
-            <li>
-            <a href="#">
-              <!--<img src="images/sunglasses.jpg" alt="">-->
-              <span class="product">Vuitton Sunglasses</span>
-            </a>
-            <!-- <span class="price">$1107</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          <li>
-            <a href="#">
-               <!--<img src="images/jeans.jpg" alt="">-->
-              <span class="product">Hourglass Jeans </span>
-            </a>
-            <!-- <span class="price">$1567</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          <li>
-            <a href="#">
-             <!-- <img src="images/nike.jpg" alt="">-->
-              <span class="product">Nike Sport Shoe</span>
-            </a>
-            <!-- <span class="price">$1234</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          <li>
-            <a href="#">
-              <!--<img src="images/scarves.jpg" alt="">-->
-              <span class="product">Hermes Silk Scarves.</span>
-            </a>
-            <!-- <span class="price">$2312</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          <li>
-            <a href="#">
-              <!--<img src="images/blueBag.jpg" alt="">-->
-              <span class="product">Succi Ladies Bag</span>
-            </a>
-            <!-- <span class="price">$1456</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          <li>
-            <a href="#">
-              <!--<img src="images/bag.jpg" alt="">-->
-              <span class="product">Gucci Womens's Bags</span>
-            </a>
-            <!-- <span class="price">$2345</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          <li>
-            <a href="#">
-              <!--<img src="images/addidas.jpg" alt="">-->
-              <span class="product">Addidas Running Shoe</span>
-            </a>
-            <!-- <span class="price">$2345</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-<li>
-            <a href="#">
-             <!--<img src="images/shirt.jpg" alt="">-->
-              <span class="product">Bilack Wear's Shirt</span>
-            </a>
-            <!-- <span class="price">$1245</span> -->
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </li>
-          </ul>
-        </div>
+       
+       
+          
       </div>
     </div>
+    <form action="/student/logout" method="post">
+    <div class="logout">
+      <button type="submit" class="logbtn">Logout</button>
+    </div>
+    </form>
   </section>
   
+   
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="jquery-3.6.1.min.js"></script>
+  
   <script>
+  
 
-const chart = document.getElementById('lineChart').getContext("2d");
+let array =[];
+array = '<%-array%>'
 
+'<%-console.log(array)%>'
+
+let newArray =[ 6, 8, 10, 9, 3 ]
+
+
+
+ const chart = document.getElementById('lineChart').getContext("2d");
 let lineChart = new Chart(chart , {
+ 
   type:'line',
   data: {
-  labels: ["Class 1" , "Class 2" ,"Class 3" ,"Class 3" , "Class 4" , "Class 5" , "Class 6" , "Class 7"],
+  labels: ["Class 1" , "Class 2" ,"Class 3" ,"Class 4" , "Class 5"],
   datasets: [{
     label: 'My Progress',
-    data: [10,8,7, 10,5],
+    data: [ 6, 8, 10, 9, 3 ],
     fill: false,
     borderColor: 'rgb(75, 192, 192)',
-    tension: 0.1
+    tension: 0.4
   }]
 
 
 }
 })
+
+
+  
+
 
 
  </script>
